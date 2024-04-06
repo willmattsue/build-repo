@@ -26,17 +26,17 @@ jobs:
       matrix:
         envi: [ dev, stage, prod ]
     steps:
-      - run: echo "hello"
+      - run: echo ${{ matrix.envi }}
   apply:
     needs: plan
-    if: success
+    if: success()
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         envi: [ dev, stage, prod ]
     steps:
-    - run: echo "hello"
+    - run: echo ${{ matrix.envi }}
   docker:
     runs-on: ubuntu-latest
     steps:
