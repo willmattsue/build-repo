@@ -13,6 +13,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: test.tf
+
+      - run: terraform format --check
       - name: Checkov GitHub Action
         uses: bridgecrewio/checkov-action@v12
         with:
