@@ -15,8 +15,12 @@ jobs:
   checkov:
     needs: setup
     runs-on: ubuntu-latest
+    - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: test.tf
     steps:
-      - run: echo "hello"
+      - run: terraform format --check
   plan:
     needs: checkov
     if: success()
@@ -26,6 +30,10 @@ jobs:
       matrix:
         envi: [ dev, stage, prod ]
     steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: test.tf
       - run: terraform init #echo ${{ matrix.envi }}
   apply:
     needs: plan
