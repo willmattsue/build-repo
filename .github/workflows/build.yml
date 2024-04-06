@@ -5,25 +5,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Hello"
-
+  startup:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello"
   setup:
-    needs: [ build, docker ]
+    needs: [ build, docker, startup ]
     runs-on: ubuntu-latest
     steps:
       - run: echo "hello"
-  sast:
+  checkov:
     needs: setup
     runs-on: ubuntu-latest
     steps:
       - run: echo "hello"
   plan:
-    needs: sast
+    needs: checkov
+    if: success()
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        envi: [ dev, stage, prod ]
     steps:
       - run: echo "hello"
   apply:
     needs: plan
+    if: success
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        envi: [ dev, stage, prod ]
     steps:
     - run: echo "hello"
   docker:
@@ -35,3 +48,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: echo "hello"
+  dockerize:
+    needs: trivy
+    if: success
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "hello"
+
+    
+    
